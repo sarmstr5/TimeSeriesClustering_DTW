@@ -46,11 +46,24 @@ def create_dist_mx(verbose, x, y, dtw_width):
             if (j - i) > dtw_width:
                 break
             dist_mx[i][j] = np.abs(x[i] - y[j])
+    print(dist_mx)
+    for i in range(0, dist_mx.shape[0]):
+        # save time by starting within the dtw width
+        initial_j = find_initial_j(i, dtw_width)
+        for j in range(initial_j, dist_mx.shape[1]-1):
+            if (j - i) > dtw_width:
+                break
+            # [index, value] i, j
+            print('i:{} j:{}'.format(i,j))
+            step, step_i , step_j = get_next_step(i,j,dist_mx)
+            dist_mx[step_i][step_j] += step[1]
+    print(dist_mx)
     return dist_mx
 
 def shortest_path(verbose, dist_arr, width=None):
     # should i start at the end or begining
     i, j, iterations = 0, 0, 0
+    path_arr = dist_arr.copy()
 
     # when the final j is reached, the path is found
     last_i, last_j = dist_arr.shape[0]-1, dist_arr.shape[1]-1
@@ -58,7 +71,9 @@ def shortest_path(verbose, dist_arr, width=None):
     path = [] # keep each index, may not be necessary
     path_cost = [] # keep cost of each step
     while (i != last_i) or (j != last_j):
-        step, i, j = get_next_step(i, j, dist_arr) # [index, value] is this a problem? the distance matrix will be in memory now 3 times? or am i just passing by reference
+        # [index, value], i, j.  matrix will be in memory now 3 times? or am i just passing by reference
+        path_arr, step, i, j = get_next_step(i, j, path_arr)
+
         path.append([i, j])
         path_cost.append(step[1])
         iterations += 1
@@ -81,11 +96,14 @@ def get_next_step(i, j, dist_mx):
 
     # which step was taken
     if next_step[0] == 0:  # diagonal step
+        dist_mx[i+1][j+1] += dist_mx[i][j]
         i += 1
         j += 1
     elif next_step[0] == 1:  # column increases, step right
+        dist_mx[i][j+1] += dist_mx[i][j]
         j += 1
     else: # step down
+        dist_mx[i+1][j] += dist_mx[i][j]
         i += 1
     return next_step, i, j
 

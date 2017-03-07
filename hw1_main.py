@@ -88,7 +88,7 @@ def run_kNN(train_df, train_labels, test_df, dtw_run = False, width = 10, parall
 
 def main():
     verbose = True
-    full_run = True
+    full_run = False
     dtw_run = True
     parallel = True
     #---------------------------#
@@ -124,10 +124,10 @@ def main():
 
     else:
         print('in else')
-        dataset1_test = 'hw1_datasets/dataset2/test_normalized.csv'
-        test1_labels = 'hw1_datasets/dataset2/test_labels.csv'
-        dataset1_train = 'hw1_datasets/dataset2/train_normalized.csv'
-        dataset1_train_labels = 'hw1_datasets/dataset2/train_labels.csv'
+        dataset1_test = 'hw1_datasets/dataset1/test_normalized.csv'
+        test1_labels = 'hw1_datasets/dataset1/test_labels.csv'
+        dataset1_train = 'hw1_datasets/dataset1/train_normalized.csv'
+        dataset1_train_labels = 'hw1_datasets/dataset1/train_labels.csv'
         train1 = pd.read_csv(dataset1_train, index_col=0)
         test1 = pd.read_csv(dataset1_test, index_col=0)
         train1_labels = pd.read_csv(dataset1_train_labels, header=None, index_col=0)
