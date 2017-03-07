@@ -13,6 +13,7 @@ import math
 from itertools import chain
 import concurrent
 import traceback
+import dtw
 
 def get_time():
     time = dt.now()
@@ -41,9 +42,10 @@ class timeseries_kNN(object):
         self.verbose = verbose
         self.predictions = []
         self.distance_metric = None
+        self.dtw_width = None
 
 
-    def fit(self, x, labels=None, dist_metric='euclidean'):
+    def fit(self, x, labels=None, dist_metric='euclidean', w = None):
         # check if test_set is pandas
         if self.verbose: print('In fit: {}'.format(get_time()))
 
@@ -55,8 +57,8 @@ class timeseries_kNN(object):
         self.train_labels.astype(int)
         labels_list = labels.transpose().values.tolist()[0]
         self.classes_set = set(labels_list) # used for voting
-
         self.distance_metric = dist_metric.lower()
+        self.dtw_width = w
 
 
     def predict(self, test_set, parallel=False, n_subprocesses=cpu_count()-1):
@@ -146,7 +148,7 @@ class timeseries_kNN(object):
     # I havent had an issue when number of chunks is equal to or less than number of CPUs
     def work_chunks(self, df, n_chunks):
         num_rows = len(df)
-        steps = math.ceil(num_rows/n_chunks) #rounding errors causes out of bounds
+        steps = math.ceil(num_rows/n_chunks)
         return [slice(n, n+steps) for n in range(0, num_rows, steps)]  #should cover uneven steps
 
     def kNN(self, a_chunk):
@@ -182,7 +184,7 @@ class timeseries_kNN(object):
 
                 yhat = self.predict_yhat(neighbors)
 
-                if test_i[0] % 10 == 0 and self.verbose:
+                if test_i[0] % 20 == 0 and self.verbose:
                     print("chunk slice: {};\ttime is:{};\tindex: {};\ti: {};\tnumber of records: {};\t{}% complete; "
                           "\t yhat: {};".
                           format(a_chunk, get_time(), test_i[0], i, len(df), round(i / len(df), 2) * 100, yhat))
@@ -200,7 +202,6 @@ class timeseries_kNN(object):
         # assuming no skipped classes e.g. 4,6
         weighted_votes = np.zeros(len(self.classes_set)+1)  # no 0 class
 
-
         for neighbor in neighbors:
             index = neighbor[0]
             # getting an error here single positional index is out of bounds
@@ -216,8 +217,11 @@ class timeseries_kNN(object):
         y = self.test_df.loc[y_index,:] # row xi
         if self.distance_metric == 'euclidean':
             dist = np.sqrt( np.sum((x-y)*(x-y)) )  # sqrt( sum( (xi-yi)^2) )
-        elif type == 'dtw':
-            pass
+        elif self.distance_metric == 'dtw':
+            dist, path, iterations = dtw.dtw_dist(self.verbose, x, y, self.dtw_width)
+            # print(path)
+            # print(iterations)
         else:
+            print(self.distance_metric)
             raise ValueError('Choose a distance metric of either euclidean or dtw')
         return dist

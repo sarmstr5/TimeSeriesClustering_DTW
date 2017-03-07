@@ -60,37 +60,45 @@ def get_time():
     time = hour + minute + '.' + second
     return time
 
-def print_results_to_csv(predictions, dataset_num):
+def print_results_to_csv(predictions, dataset_num, dtw_run, start_time):
     print('Printing Results')
-    test_output_fn = 'test_output/test_results_dataset{}_{}.csv'.format(dataset_num,get_time())
+    if dtw_run:
+        dist_type = 'DTW'
+    else:
+        dist_type = 'Euclidean'
+    test_output_fn = 'test_output/test_results_dataset_{}_{}_s{}_e{}.csv'.format(dist_type, dataset_num, start_time, get_time())
 
     with open(test_output_fn, 'w') as results:
         for y in predictions:
             results.write('{0}\n'.format(y))
 
-def run_kNN(train_df, train_labels, test_df, dtw_run = False, parallel = True, nprocesses=cpu_count(), verbose=False):
-    if dtw_run: dist_metric='dtw'
-    else: dist_metric='euclidean'
+def run_kNN(train_df, train_labels, test_df, dtw_run = False, width = 10, parallel = True, nprocesses=cpu_count(), verbose=False):
+    if dtw_run:
+        dist_metric = 'dtw'
+
+    else: dist_metric = 'euclidean'
 
     if verbose: print('Instantiating kNN')
     kNN = timeseries_kNN()
 
     if verbose: print('Fitting kNN')
-    kNN.fit(train_df, train_labels, dist_metric)  #initializes kNN object
+    kNN.fit(train_df, train_labels, dist_metric, width)  #initializes kNN object
 
     return kNN.predict(test_df, parallel, nprocesses)
 
 def main():
     verbose = True
     full_run = True
-    dtw_run = False
+    dtw_run = True
     parallel = True
+    #---------------------------#
+
     num_subprocesses = cpu_count()-1
-    width = 1
+    dtw_width = 5
     start_time = get_time()
 
     if verbose:
-        print(get_time())
+        print(start_time)
 
     if full_run:
         test_fns, train_fns, labels_fns = get_fns(verbose)
@@ -102,13 +110,18 @@ def main():
         results_array = []
         i = 1
         for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
+            start_time = get_time()
             print(label_df.shape)
             # print(label_df)
-            class_predictions = run_kNN(train_df, label_df, test_df, dtw_run, parallel, num_subprocesses, verbose)
+            class_predictions = run_kNN(train_df, label_df, test_df, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
 
             if verbose: print('Results Found for dataset: {}\ttime: {}'.format(i, get_time()))
-            print_results_to_csv(class_predictions, i)
+            print_results_to_csv(class_predictions, i, dtw_run, start_time)
             i += 1
+        if verbose:
+            print('-------Completed!{}-------')
+            print('Started at: {}\tFinished at: {}'.format(start_time, get_time()))
+
     else:
         print('in else')
         dataset1_test = 'hw1_datasets/dataset2/test_normalized.csv'
@@ -119,14 +132,14 @@ def main():
         test1 = pd.read_csv(dataset1_test, index_col=0)
         train1_labels = pd.read_csv(dataset1_train_labels, header=None, index_col=0)
 
-        class_predictions = run_kNN(train1, train1_labels, test1, dtw_run, parallel, num_subprocesses, verbose)
+        class_predictions = run_kNN(train1, train1_labels, test1, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
         if verbose: print('Results Found')
         print(len(class_predictions))
         # print_results_to_csv(class_predictions, 1)
 
     if verbose:
         print('-------Completed!{}-------')
-        print('Started at: {}\tFinished at: {}').format(start_time, get_time()))
+        print('Started at: {}\tFinished at: {}'.format(start_time, get_time()))
 
 
 

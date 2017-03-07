@@ -13,85 +13,69 @@ def get_time():
     time = hour + minute + '.' + second
     return time
 
+
 def dtw_dist(verbose, x, y, w):
-    if verbose:
-        print('in dtw_dist: {}'.format(get_time()))
     # pass
-    width = w
     # calculate distance matrix
-    dtw_dist_mx = create_dist_mx(verbose, x, y)
+    dtw_dist_mx = create_dist_mx(verbose, x, y, w)
     # calculate shortest path
     dist, path, iterations = shortest_path(verbose, dtw_dist_mx, w)
-
-    return dist
+    return dist, path, iterations
 
 def calculate_width(verbose):
-    if verbose:
-        print("Calculating width: {}".format(get_time()))
     pass
 
+def find_initial_j(i, dtw_width):
+    if i - dtw_width > 0:
+        initial_j = i - dtw_width
+    else:
+        initial_j = 0
+    return initial_j
 
-def create_dist_mx(verbose, x, y):
-    if verbose:
-        print('Creating distance Matrix: {}'.format(get_time()))
-    #create an array
+def create_dist_mx(verbose, x, y, dtw_width):
+    # create an array
     assert x.shape == y.shape, 'The shapes dont match'
     dist_mx = np.zeros(shape=(x.shape[0], y.shape[0]))
     dist_mx[:] = np.inf
     i = 0
     j = 0
     for i in range(0, dist_mx.shape[0]):
-        for j in range(0, dist_mx.shape[0]):
+        # save time by starting within the dtw width
+        initial_j = find_initial_j(i, dtw_width)
+        for j in range(initial_j, dist_mx.shape[1]):
+            if (j - i) > dtw_width:
+                break
             dist_mx[i][j] = np.abs(x[i] - y[j])
     return dist_mx
 
-
 def shortest_path(verbose, dist_arr, width=None):
-    if verbose:
-        print("calculating shortest distance; {}".format(get_time()))
     # should i start at the end or begining
-    i, j, iteration = 0, 0, 0
+    i, j, iterations = 0, 0, 0
 
     # when the final j is reached, the path is found
-    if width is None:
-        end_buffer = 0
-    else:
-        end_buffer = width
-
     last_i, last_j = dist_arr.shape[0]-1, dist_arr.shape[1]-1
 
     path = [] # keep each index, may not be necessary
     path_cost = [] # keep cost of each step
-    while (i <= last_i-end_buffer and j != last_j) or (j <= last_j-end_buffer and i != last_i):
-        if verbose:
-            print('searching for shortest path index i: {};\tindex j: {}'.format(i,j))
-        step, i, j = get_next_step(i, j, dist_arr, width) # [index, value] is this a problem? the distance matrix will be in memory now 3 times? or am i just passing by reference
+    while (i != last_i) or (j != last_j):
+        step, i, j = get_next_step(i, j, dist_arr) # [index, value] is this a problem? the distance matrix will be in memory now 3 times? or am i just passing by reference
         path.append([i, j])
         path_cost.append(step[1])
-        iteration += 1
+        iterations += 1
+    return np.sum(path_cost), path, iterations
 
-    return np.sum(path_cost), path, iteration
-
-def get_next_step(i, j, dist_mx, w):
+def get_next_step(i, j, dist_mx):
     # make an assertion regarding size of i and j?
-    if w is None: # need to work on this!!!!!!!!
-        w = dist_mx.shape[0] - max(i, j)
-    print(w)
-
-    # checking moves are within the warping width
-    if i == 0 and j == 0:
-        right, diagonal, down = dist_mx[i][j+1], dist_mx[i+1][j+1], dist_mx[i+1][j]
-    elif (j - i) >= w:
-        print('cant go right')
-        diagonal, right, down = dist_mx[i+1][j+1], np.inf, dist_mx[i+1][j]
-    elif (i - j) >= w:
-        print('cant go down')
-        diagonal, right, down = dist_mx[i+1][j+1], dist_mx[i][j+1], np.inf
-    else:
-        print('Went diagonal')
+    # if step is outside of specified width, value is np.inf
+    if (i != dist_mx.shape[0]-1) and (j != dist_mx.shape[0]-1):
         diagonal, right, down = dist_mx[i+1][j+1], dist_mx[i][j+1], dist_mx[i+1][j]
+    elif j == dist_mx.shape[1]-1:
+        diagonal, right, down = np.inf, np.inf, dist_mx[i+1][j]
+    else:
+        diagonal, right, down = np.inf, dist_mx[i][j+1], np.inf
 
     # find the cheapest move
+    # diagonal, right, down steps are chosen in that order in place of a tie
     step_mx = [diagonal, right, down]
     next_step = [np.argmin(step_mx), min(step_mx)]  # [index, value]
 
@@ -103,7 +87,6 @@ def get_next_step(i, j, dist_mx, w):
         j += 1
     else: # step down
         i += 1
-
     return next_step, i, j
 
 def main():
@@ -113,7 +96,7 @@ def main():
     y = np.random.randint(5,15,10)
     print(x)
     print(y)
-    mx = create_dist_mx(False, x, y)
+    mx = create_dist_mx(False, x, y, dtw_width)
     print(mx)
     path_cost, path, num_iterations = shortest_path(verbose, mx, dtw_width)
     print(path_cost)
