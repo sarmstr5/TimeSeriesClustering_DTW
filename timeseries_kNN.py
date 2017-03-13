@@ -31,8 +31,8 @@ def get_time():
 class timeseries_kNN(object):
 
 
-    def __init__(self, k=1, data=None, labels=None, verbose=True):
-        self.k = k
+    def __init__(self, data=None, labels=None, verbose=True):
+        self.k = None
         self.data = None
         self.train_labels = None
         self.test_labels = None
@@ -45,7 +45,7 @@ class timeseries_kNN(object):
         self.dtw_width = None
 
 
-    def fit(self, x, labels=None, dist_metric='euclidean', w = None):
+    def fit(self, x, labels=None, dist_metric='euclidean', w = None, k_neigbors=1):
         # check if test_set is pandas
         if self.verbose: print('In fit: {}'.format(get_time()))
 
@@ -59,6 +59,7 @@ class timeseries_kNN(object):
         self.classes_set = set(labels_list) # used for voting
         self.distance_metric = dist_metric.lower()
         self.dtw_width = w
+        self.k = k_neigbors
 
 
     def predict(self, test_set, parallel=False, n_subprocesses=cpu_count()-1):
@@ -184,7 +185,7 @@ class timeseries_kNN(object):
 
                 yhat = self.predict_yhat(neighbors)
 
-                if test_i[0] % 20 == 0 and self.verbose:
+                if self.verbose and test_i[0] % 20 == 0:
                     print("chunk slice: {};\ttime is:{};\tindex: {};\ti: {};\tnumber of records: {};\t{}% complete; "
                           "\t yhat: {};".
                           format(a_chunk, get_time(), test_i[0], i, len(df), round(i / len(df), 2) * 100, yhat))

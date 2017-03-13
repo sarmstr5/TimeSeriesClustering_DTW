@@ -47,7 +47,7 @@ def get_fns(full_rn=True):
     return dataset1_test, dataset1_train, dataset2_test, dataset2_train, dataset3_test, dataset3_train, dataset4_test, dataset4_train, dataset5_test, dataset5_train,
 
 def normalize(x, verbose=True):
-    return (x - x.mean()) / x.std()
+    return (x - x.mean()) / (x.std() + 1e-10)   # handles zero std
 
 def main():
     verbose = True
@@ -64,11 +64,11 @@ def main():
     t5_df = pd.read_csv(train5, sep='\s+', header=None)
 
     # first column are the cluster labels
-    train1_labels = t1_df.pop(0)
-    train2_labels = t2_df.pop(0)
-    train3_labels = t3_df.pop(0)
-    train4_labels = t4_df.pop(0)
-    train5_labels = t5_df.pop(0)
+    train1_labels = pd.DataFrame(data=t1_df.pop(0))
+    train2_labels = pd.DataFrame(data=t2_df.pop(0))
+    train3_labels = pd.DataFrame(data=t3_df.pop(0))
+    train4_labels = pd.DataFrame(data=t4_df.pop(0))
+    train5_labels = pd.DataFrame(data=t5_df.pop(0))
 
     # normalize training dataframes
     t1_norm = normalize(t1_df)
@@ -76,6 +76,13 @@ def main():
     t3_norm = normalize(t3_df)
     t4_norm = normalize(t4_df)
     t5_norm = normalize(t5_df)
+
+    # write train dataframes data to disk
+    t1_df.to_csv(path_or_buf='hw1_datasets/dataset1/train.csv')
+    t2_df.to_csv(path_or_buf='hw1_datasets/dataset2/train.csv')
+    t3_df.to_csv(path_or_buf='hw1_datasets/dataset3/train.csv')
+    t4_df.to_csv(path_or_buf='hw1_datasets/dataset4/train.csv')
+    t5_df.to_csv(path_or_buf='hw1_datasets/dataset5/train.csv')
 
     # write normalized train dataframes to disk
     t1_norm.to_csv(path_or_buf='hw1_datasets/dataset1/train_normalized.csv')
@@ -85,11 +92,11 @@ def main():
     t5_norm.to_csv(path_or_buf='hw1_datasets/dataset5/train_normalized.csv')
 
     # write training labels to disk
-    train1_labels.to_csv(path='hw1_datasets/dataset1/train_labels.csv')
-    train2_labels.to_csv(path='hw1_datasets/dataset2/train_labels.csv')
-    train3_labels.to_csv(path='hw1_datasets/dataset3/train_labels.csv')
-    train4_labels.to_csv(path='hw1_datasets/dataset4/train_labels.csv')
-    train5_labels.to_csv(path='hw1_datasets/dataset5/train_labels.csv')
+    train1_labels.to_csv(path_or_buf='hw1_datasets/dataset1/train_labels.csv')
+    train2_labels.to_csv(path_or_buf='hw1_datasets/dataset2/train_labels.csv')
+    train3_labels.to_csv(path_or_buf='hw1_datasets/dataset3/train_labels.csv')
+    train4_labels.to_csv(path_or_buf='hw1_datasets/dataset4/train_labels.csv')
+    train5_labels.to_csv(path_or_buf='hw1_datasets/dataset5/train_labels.csv')
 
     # Read in test data as dataframes
     tst1_df = pd.read_csv(test1, sep='\s+', header=None)
@@ -99,11 +106,11 @@ def main():
     tst5_df = pd.read_csv(test5, sep='\s+', header=None)
 
     # Remove first column
-    test1_labels = tst1_df.pop(0)
-    test2_labels = tst2_df.pop(0)
-    test3_labels = tst3_df.pop(0)
-    test4_labels = tst4_df.pop(0)
-    test5_labels = tst5_df.pop(0)
+    test1_labels = pd.DataFrame(data=tst1_df.pop(0))
+    test2_labels = pd.DataFrame(data=tst2_df.pop(0))
+    test3_labels = pd.DataFrame(data=tst3_df.pop(0))
+    test4_labels = pd.DataFrame(data=tst4_df.pop(0))
+    test5_labels = pd.DataFrame(data=tst5_df.pop(0))
 
     # Normalize dataframes (x - xbar)/sigma
     tst1_norm = normalize(tst1_df)
@@ -111,6 +118,13 @@ def main():
     tst3_norm = normalize(tst3_df)
     tst4_norm = normalize(tst4_df)
     tst5_norm = normalize(tst5_df)
+
+    # write test data to disk as csv
+    tst1_df.to_csv(path_or_buf='hw1_datasets/dataset1/test.csv')
+    tst2_df.to_csv(path_or_buf='hw1_datasets/dataset1/test.csv')
+    tst3_df.to_csv(path_or_buf='hw1_datasets/dataset1/test.csv')
+    tst4_df.to_csv(path_or_buf='hw1_datasets/dataset1/test.csv')
+    tst5_df.to_csv(path_or_buf='hw1_datasets/dataset1/test.csv')
 
     # write normalized dataframes to disk
     tst1_norm.to_csv(path_or_buf='hw1_datasets/dataset1/test_normalized.csv')
@@ -120,11 +134,11 @@ def main():
     tst5_norm.to_csv(path_or_buf='hw1_datasets/dataset5/test_normalized.csv')
 
     # write test labels to disk
-    test1_labels.to_csv(path='hw1_datasets/dataset1/test_labels.csv')
-    test2_labels.to_csv(path='hw1_datasets/dataset2/test_labels.csv')
-    test3_labels.to_csv(path='hw1_datasets/dataset3/test_labels.csv')
-    test4_labels.to_csv(path='hw1_datasets/dataset4/test_labels.csv')
-    test5_labels.to_csv(path='hw1_datasets/dataset5/test_labels.csv')
+    test1_labels.to_csv(path_or_buf='hw1_datasets/dataset1/test_labels.csv')
+    test2_labels.to_csv(path_or_buf='hw1_datasets/dataset2/test_labels.csv')
+    test3_labels.to_csv(path_or_buf='hw1_datasets/dataset3/test_labels.csv')
+    test4_labels.to_csv(path_or_buf='hw1_datasets/dataset4/test_labels.csv')
+    test5_labels.to_csv(path_or_buf='hw1_datasets/dataset5/test_labels.csv')
 
     print('This is train1: {}'.format(t1_norm.head()))
     print('This is train1 labels: {}'.format(train1_labels.head()))
