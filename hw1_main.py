@@ -46,13 +46,14 @@ def get_time():
     time = hour + minute + '.' + second
     return time
 
-def print_results_to_csv(predictions, dataset_num, dtw_run, start_time, dtw_width):
+def print_results_to_csv(predictions, dataset_num, dtw_run, start_time, dtw_width, k):
     print('Printing Results')
     if dtw_run:
         dist_type = 'DTW'
+        test_output_fn = 'test_output/test_results_dataset{}_{}_{}_k{}.csv'.format(dataset_num, dist_type, dtw_width, k)
     else:
         dist_type = 'Euclidean'
-    test_output_fn = 'test_output/test_results_dataset_{}_{}_{}_s{}_e{}.csv'.format(dist_type, dtw_width, dataset_num, start_time, get_time())
+        test_output_fn = 'test_output/test_results_dataset{}_{}_k{}.csv'.format(dataset_num, dist_type, k)
 
     with open(test_output_fn, 'w') as results:
         for y in predictions:
@@ -80,7 +81,7 @@ def main():
     #---------------------------#
 
     num_subprocesses = cpu_count()-1
-    dtw_width = 3
+    dtw_width = 4
     start_time = get_time()
 
     if verbose:
@@ -94,16 +95,17 @@ def main():
         test_dfs = get_dataframes(verbose, test_fns)
 
         results_array = []
-        for k in range(1,2):
+        for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
             i = 1
-            for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
+            k = 1
+            for dtw_width in range(2,5):
                 s_time = get_time()
                 print(label_df.shape)
                 # print(label_df)
                 class_predictions = run_kNN(train_df, label_df, test_df, k, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
 
                 if verbose: print('Results Found for dataset: {}\ttime: {}'.format(i, get_time()))
-                print_results_to_csv(class_predictions, i, dtw_run, s_time, dtw_width)
+                print_results_to_csv(class_predictions, i, dtw_run, s_time, dtw_width, k)
                 i += 1
             if verbose:
                 print('-------Completed!{}-------'.format(i))
