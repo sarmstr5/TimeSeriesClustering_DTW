@@ -76,7 +76,7 @@ def run_kNN(train_df, train_labels, test_df, k=1, dtw_run = False, width = 10, p
 def main():
     verbose = True
     full_run = True
-    dtw_run = True
+    dtw_run = False
     parallel = True
     #---------------------------#
 
@@ -97,8 +97,9 @@ def main():
         results_array = []
         for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
             i = 1
-            k = 1
-            for dtw_width in range(2,5):
+            # k = 1
+            dtw_width = 10
+            for k in range(2,5):
                 s_time = get_time()
                 print(label_df.shape)
                 # print(label_df)
@@ -106,7 +107,7 @@ def main():
 
                 if verbose: print('Results Found for dataset: {}\ttime: {}'.format(i, get_time()))
                 print_results_to_csv(class_predictions, i, dtw_run, s_time, dtw_width, k)
-                i += 1
+            i += 1
             if verbose:
                 print('-------Completed!{}-------'.format(i))
                 print('Started at: {}\tFinished at: {}'.format(s_time, get_time()))
@@ -131,9 +132,6 @@ def main():
         print('Started at: {}\tFinished at: {}'.format(start_time, get_time()))
 
 
-
-
-    # knn = NearestNeighbors(n_neighbors=5, algorithm='ball_tree', metric='minkowski', n_jobs=-2).fit(r_df)
 if __name__ == '__main__':
     main()
 
