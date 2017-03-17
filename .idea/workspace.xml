@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5082c989-91de-4680-b08d-0eee7dc3d53f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dtw.py" afterPath="$PROJECT_DIR$/dtw.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Create_DTW_Matrices.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hw1_main.py" afterPath="$PROJECT_DIR$/hw1_main.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_output/test_results_dataset1_Euclidean_k2.csv" afterPath="$PROJECT_DIR$/test_output/test_results_dataset1_Euclidean_k2.csv" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,7 +19,7 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="dtw.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="dtw.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dtw.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
@@ -29,11 +31,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hw1_main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="hw1_main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw1_main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="102" column="15" lean-forward="false" selection-start-line="102" selection-start-column="15" selection-end-line="102" selection-end-column="15" />
+            <state relative-caret-position="300">
+              <caret line="103" column="40" lean-forward="false" selection-start-line="103" selection-start-column="40" selection-end-line="103" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Create_DTW_Matrices.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Create_DTW_Matrices.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="680">
+              <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -42,7 +54,7 @@
       <file leaf-file-name="timeseries_kNN.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/timeseries_kNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4088">
+            <state relative-caret-position="-560">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
@@ -53,14 +65,23 @@
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/hw1_main.py" />
         <option value="$PROJECT_DIR$/dtw.py" />
+        <option value="$PROJECT_DIR$/test_output/Create_DTW_Matrices.py" />
+        <option value="$PROJECT_DIR$/Create_DTW_Matrices.py" />
+        <option value="$PROJECT_DIR$/hw1_main.py" />
       </list>
     </option>
   </component>
@@ -107,7 +128,12 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="Python.dtw">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\shane.armstrong\programming\CS687\TimeSeriesClustering_DTW" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.hw1_main">
     <configuration default="false" name="hw1_main" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -138,6 +164,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="TimeSeriesClustering_DTW" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dtw.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Create_DTW_Matrices" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="TimeSeriesClustering_DTW" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Create_DTW_Matrices.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -276,14 +319,16 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Python.hw1_main" />
       <item index="1" class="java.lang.String" itemvalue="Python.dtw" />
+      <item index="2" class="java.lang.String" itemvalue="Python.Create_DTW_Matrices" />
     </list>
     <recent_temporary>
-      <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="Python.dtw" />
-        <item index="1" class="java.lang.String" itemvalue="Python.hw1_main" />
+      <list size="3">
+        <item index="0" class="java.lang.String" itemvalue="Python.hw1_main" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Create_DTW_Matrices" />
+        <item index="2" class="java.lang.String" itemvalue="Python.dtw" />
       </list>
     </recent_temporary>
   </component>
@@ -302,7 +347,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19915701" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -385,24 +430,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw1_main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="102" column="15" lean-forward="false" selection-start-line="102" selection-start-column="15" selection-end-line="102" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/timeseries_kNN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4088">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dtw.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -410,6 +437,32 @@
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/timeseries_kNN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-560">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Create_DTW_Matrices.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="680">
+          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hw1_main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="103" column="40" lean-forward="false" selection-start-line="103" selection-start-column="40" selection-end-line="103" selection-end-column="40" />
+          <folding />
         </state>
       </provider>
     </entry>

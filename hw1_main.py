@@ -76,12 +76,12 @@ def run_kNN(train_df, train_labels, test_df, k=1, dtw_run = False, width = 10, p
 def main():
     verbose = True
     full_run = True
-    dtw_run = False
+    dtw_run = True
     parallel = True
     #---------------------------#
 
     num_subprocesses = cpu_count()-1
-    dtw_width = 4
+    dtw_width = 3
     start_time = get_time()
 
     if verbose:
@@ -98,15 +98,15 @@ def main():
         for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
             i = 1
             # k = 1
-            dtw_width = 10
-            for k in range(2,5):
-                s_time = get_time()
-                print(label_df.shape)
-                # print(label_df)
-                class_predictions = run_kNN(train_df, label_df, test_df, k, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
+            for k in range(1,3):
+                for dtw_width in range(3, 10):
+                    s_time = get_time()
+                    print(label_df.shape)
+                    # print(label_df)
+                    class_predictions = run_kNN(train_df, label_df, test_df, k, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
 
-                if verbose: print('Results Found for dataset: {}\ttime: {}'.format(i, get_time()))
-                print_results_to_csv(class_predictions, i, dtw_run, s_time, dtw_width, k)
+                    if verbose: print('Results Found for dataset: {}\ttime: {}'.format(i, get_time()))
+                    print_results_to_csv(class_predictions, i, dtw_run, s_time, dtw_width, k)
             i += 1
             if verbose:
                 print('-------Completed!{}-------'.format(i))
