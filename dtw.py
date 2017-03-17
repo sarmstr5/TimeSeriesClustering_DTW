@@ -39,10 +39,13 @@ def find_initial_j(i, dtw_width):
 def create_dist_mx(verbose, x, y, dtw_width):
     # create an array
     assert x.shape == y.shape, 'The shapes dont match'
+
     # create an extra column and row for path traverseral
     # makes it so I do not have to make conditional checks for out of index errors
     dist_mx = np.zeros(shape=(x.shape[0], y.shape[0]))
     dist_mx[:] = np.inf
+
+    # Create distance matrix
     for i in range(0, dist_mx.shape[0]):
         # save time by starting within the dtw width
         initial_j = find_initial_j(i, dtw_width)
@@ -54,6 +57,8 @@ def create_dist_mx(verbose, x, y, dtw_width):
     path_mx = np.insert(path_mx,0,np.inf,axis=1)
     path_mx[0,0] = 0
     # print(path_mx)
+
+    # go back through summing the smallest cost step to find the optimal solution
     for i in range(1, path_mx.shape[0]):
         # save time by starting within the dtw width
         initial_j = find_initial_j(i, dtw_width)
@@ -69,13 +74,14 @@ def create_dist_mx(verbose, x, y, dtw_width):
             step = min([path_mx[i-1][j-1], path_mx[i][j-1], path_mx[i-1][j]])
             # print(step)
             # print(path_mx)
-            # dist_mx[step_i][step_j] += step[1]
+            path_mx[i, j] += step
     # print(path_mx)
     return path_mx[1:,1:]
 
 def shortest_path(verbose, dist_arr, width=None):
     # should i start at the end or begining
-    i, j, iterations = dist_arr.shape[0], dist_arr.shape[1], 0
+    print(dist_arr)
+    i, j, iterations = dist_arr.shape[0]-1, dist_arr.shape[1]-1, 0
     path_arr = dist_arr.copy()
 
     # when the final j is reached, the path is found
@@ -100,7 +106,7 @@ def get_next_step(i, j, dist_mx):
 
     # find the cheapest move
     # diagonal, right, down steps are chosen in that order in place of a tie
-    step_mx = [diagonal, left, down]
+    step_mx = [diagonal, left, up]
     next_step = [np.argmin(step_mx), min(step_mx)]  # [index, value]
 
     # which step was taken
@@ -121,9 +127,11 @@ def main():
     print(x)
     print(y)
     mx = create_dist_mx(False, x, y, dtw_width)
-    path_cost, path, num_iterations = shortest_path(verbose, mx, dtw_width)
-    print(path_cost)
-    print(path)
+    print(mx[-1,-1])
+    print(mx)
+    # path_cost, path, num_iterations = shortest_path(verbose, mx, dtw_width)
+    # print(path_cost)
+    # print(path)
 
 if __name__ == '__main__':
     main()
