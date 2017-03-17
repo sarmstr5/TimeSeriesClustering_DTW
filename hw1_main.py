@@ -80,7 +80,7 @@ def main():
     parallel = True
     #---------------------------#
 
-    num_subprocesses = cpu_count()-1
+    num_subprocesses = cpu_count()
     dtw_width = 3
     start_time = get_time()
 
@@ -90,17 +90,19 @@ def main():
     if full_run:
         test_fns, train_fns, labels_fns = get_fns(verbose)
         # dfs below are generators
-        train_dfs = get_dataframes(verbose, train_fns)
-        label_dfs = get_dataframes(verbose, labels_fns)
-        test_dfs = get_dataframes(verbose, test_fns)
+        train_dfs = get_dataframes(verbose, train_fns[1:])
+        label_dfs = get_dataframes(verbose, labels_fns[1:])
+        test_dfs = get_dataframes(verbose, test_fns[1:])
 
+        i = 2
         results_array = []
         for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
-            i = 1
             # k = 1
+            s_time = get_time()
             for k in range(1,3):
-                for dtw_width in range(3, 10):
-                    s_time = get_time()
+                for dtw_width in range(3, 6):
+                    if verbose: print('\n---------\nDATASET: {}\tk:{}\tDTW_width:{}\ttime: {}\n---------\n'.format(
+                        i, k, dtw_width, get_time()))
                     print(label_df.shape)
                     # print(label_df)
                     class_predictions = run_kNN(train_df, label_df, test_df, k, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
