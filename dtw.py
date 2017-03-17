@@ -66,16 +66,12 @@ def create_dist_mx(verbose, x, y, dtw_width):
             current_step = path_mx[i,j]
             # print('i:{}\tj:{}\tvalue:{}'.format(i,j,current_step))
             if (j - i) > dtw_width:
-                # print('break')
                 break
             if(i==1 and j ==1) or (current_step == np.inf):
                 # print('continue, current step:{}'.format(current_step))
                 continue
             step = min([path_mx[i-1][j-1], path_mx[i][j-1], path_mx[i-1][j]])
-            # print(step)
-            # print(path_mx)
             path_mx[i, j] += step
-    # print(path_mx)
     return path_mx[1:,1:]
 
 def shortest_path(verbose, dist_arr, width=None):
