@@ -73,16 +73,55 @@ def run_kNN(train_df, train_labels, test_df, k=1, dtw_run = False, width = 10, p
 
     return kNN.predict(test_df, parallel, nprocesses)
 
+def dtw_run(train_dfs, label_dfs, test_dfs,i, k_range, dtw_width_range, num_subprocesses, parallel=True, verbose=True):
+    for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
+        # k = 1
+        s_time = get_time()
+        for k in k_range:
+            for dtw_width in dtw_width_range:
+                if verbose: print('\n---DTW---\nDATASET: {}\tk:{}\tDTW_width:{}\ttime: {}\n---------\n'.format(
+                    i, k, dtw_width, get_time()))
+                print(label_df.shape)
+                # print(label_df)
+                class_predictions = run_kNN(train_df, label_df, test_df, k, True, dtw_width, parallel, num_subprocesses, verbose)
+
+                if verbose: print('Results Found for dataset: {}\ttime: {}'.format(i, get_time()))
+                print_results_to_csv(class_predictions, i, True, s_time, dtw_width, k)
+        i += 1
+        if verbose:
+            print('-------Completed!DATASET{}-------'.format(i))
+            print('Started at: {}\tFinished at: {}'.format(s_time, get_time()))
+
+def euc_run(train_dfs, label_dfs, test_dfs,i, k_range, num_subprocesses, parallel=True, verbose=True):
+    for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
+        # k = 1
+        s_time = get_time()
+        for k in k_range:
+            if verbose: print('\n---EUC---\nDATASET: {}\tk:{}\ttime: {}\n---------\n'.format(
+                i, k,get_time()))
+            print(label_df.shape)
+            # print(label_df)
+            class_predictions = run_kNN(train_df, label_df, test_df, k, False, None, parallel, num_subprocesses, verbose)
+
+            if verbose: print('Results Found for dataset: {}\ttime: {}'.format(i, get_time()))
+            print_results_to_csv(class_predictions, i, False, s_time, None, k)
+        i += 1
+        if verbose:
+            print('-------Completed!DATASET{}-------'.format(i))
+            print('Started at: {}\tFinished at: {}\tRun time:{}'.format(s_time, get_time(), float(get_time())-float(s_time)))
+
 def main():
     verbose = True
-    full_run = True
-    dtw_run = True
+    full_run = False
+    dtw_run = False
     parallel = True
     #---------------------------#
-
-    num_subprocesses = cpu_count()
-    dtw_width = 3
+    num_subprocesses = cpu_count()-1
     start_time = get_time()
+    #---------------------------#
+    i = 1
+    k_range = range(3,10,2) #should do odd k's
+    dtw_width_range = range(1,11,1)
 
     if verbose:
         print(start_time)
@@ -94,38 +133,27 @@ def main():
         label_dfs = get_dataframes(verbose, labels_fns[:])
         test_dfs = get_dataframes(verbose, test_fns[:])
 
-        i = 0
-        results_array = []
-        for train_df, label_df, test_df in zip(train_dfs, label_dfs, test_dfs):
-            # k = 1
-            s_time = get_time()
-            for k in range(1,3):
-                for dtw_width in range(3, 7):
-                    if verbose: print('\n---------\nDATASET: {}\tk:{}\tDTW_width:{}\ttime: {}\n---------\n'.format(
-                        i, k, dtw_width, get_time()))
-                    print(label_df.shape)
-                    # print(label_df)
-                    class_predictions = run_kNN(train_df, label_df, test_df, k, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
-
-                    if verbose: print('Results Found for dataset: {}\ttime: {}'.format(i, get_time()))
-                    print_results_to_csv(class_predictions, i, dtw_run, s_time, dtw_width, k)
-            i += 1
-            if verbose:
-                print('-------Completed!{}-------'.format(i))
-                print('Started at: {}\tFinished at: {}'.format(s_time, get_time()))
+        if dtw_run:
+            dtw_run(train_dfs, label_dfs, test_dfs,i, k_range, dtw_width_range, num_subprocesses, parallel=True, verbose=True)
+        else:
+            euc_run(train_dfs, label_dfs, test_dfs,i, k_range, num_subprocesses, parallel=True, verbose=True)
 
     else:
         print('in else')
-        dataset1_test = 'hw1_datasets/dataset1/test_normalized.csv'
-        test1_labels = 'hw1_datasets/dataset1/test_labels.csv'
-        dataset1_train = 'hw1_datasets/dataset1/train_normalized.csv'
-        dataset1_train_labels = 'hw1_datasets/dataset1/train_labels.csv'
-        train1 = pd.read_csv(dataset1_train, index_col=0)
-        test1 = pd.read_csv(dataset1_test, index_col=0)
-        train1_labels = pd.read_csv(dataset1_train_labels, header=None, index_col=0)
+        i = 2
+        dtw_width=4
+        k=1
+        dtw_run=True
+        dataset_test = 'hw1_datasets/dataset{}/test_normalized.csv'.format(i)
+        test_labels = 'hw1_datasets/dataset{}/test_labels.csv'.format(i)
+        dataset_train = 'hw1_datasets/dataset{}/train_normalized.csv'.format(i)
+        dataset_train_labels = 'hw1_datasets/dataset{}/train_labels.csv'.format(i)
+        train_df = pd.read_csv(dataset_train, index_col=0)
+        test_df = pd.read_csv(dataset_test, index_col=0)
+        label_df = pd.read_csv(dataset_train_labels, index_col=0)
 
-        class_predictions = run_kNN(train1, train1_labels, test1, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
-        if verbose: print('Results Found')
+        class_predictions = run_kNN(train_df, label_df, test_df, k, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
+        print_results_to_csv(class_predictions, i, dtw_run, start_time, dtw_width, k)
         print(len(class_predictions))
         # print_results_to_csv(class_predictions, 1)
 
