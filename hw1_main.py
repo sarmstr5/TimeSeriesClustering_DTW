@@ -112,16 +112,16 @@ def euc_run(train_dfs, label_dfs, test_dfs,i, k_range, num_subprocesses, paralle
 
 def main():
     verbose = True
-    full_run = False
-    dtw_run = False
+    full_run = True
+    do_dtw_run = True
     parallel = True
     #---------------------------#
     num_subprocesses = cpu_count()-1
     start_time = get_time()
     #---------------------------#
     i = 1
-    k_range = range(3,10,2) #should do odd k's
-    dtw_width_range = range(1,11,1)
+    k_range = range(1,2,1) #should do odd k's
+    dtw_width_range = range(3,5,1)
 
     if verbose:
         print(start_time)
@@ -129,11 +129,11 @@ def main():
     if full_run:
         test_fns, train_fns, labels_fns = get_fns(verbose)
         # dfs below are generators
-        train_dfs = get_dataframes(verbose, train_fns[:])
-        label_dfs = get_dataframes(verbose, labels_fns[:])
-        test_dfs = get_dataframes(verbose, test_fns[:])
+        train_dfs = get_dataframes(verbose, train_fns[:3])
+        label_dfs = get_dataframes(verbose, labels_fns[:3])
+        test_dfs = get_dataframes(verbose, test_fns[:3])
 
-        if dtw_run:
+        if do_dtw_run:
             dtw_run(train_dfs, label_dfs, test_dfs,i, k_range, dtw_width_range, num_subprocesses, parallel=True, verbose=True)
         else:
             euc_run(train_dfs, label_dfs, test_dfs,i, k_range, num_subprocesses, parallel=True, verbose=True)
@@ -143,7 +143,7 @@ def main():
         i = 2
         dtw_width=4
         k=1
-        dtw_run=True
+        do_dtw_run=True
         dataset_test = 'hw1_datasets/dataset{}/test_normalized.csv'.format(i)
         test_labels = 'hw1_datasets/dataset{}/test_labels.csv'.format(i)
         dataset_train = 'hw1_datasets/dataset{}/train_normalized.csv'.format(i)
@@ -152,8 +152,8 @@ def main():
         test_df = pd.read_csv(dataset_test, index_col=0)
         label_df = pd.read_csv(dataset_train_labels, index_col=0)
 
-        class_predictions = run_kNN(train_df, label_df, test_df, k, dtw_run, dtw_width, parallel, num_subprocesses, verbose)
-        print_results_to_csv(class_predictions, i, dtw_run, start_time, dtw_width, k)
+        class_predictions = run_kNN(train_df, label_df, test_df, k, do_dtw_run, dtw_width, parallel, num_subprocesses, verbose)
+        print_results_to_csv(class_predictions, i, do_dtw_run, start_time, dtw_width, k)
         print(len(class_predictions))
         # print_results_to_csv(class_predictions, 1)
 
